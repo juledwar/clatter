@@ -6,12 +6,17 @@ from click.testing import CliRunner
 
 class CommandValidator(object):
 
+    def __init__(self, options=0):
+        super(CommandValidator, self).__init__()
+        self.options = options
+
     def validate(self, command, args, expected, options):
 
         stdout, stderr = self.run_command(command, args)
 
         checker = doctest.OutputChecker()
 
+        options = self.options | options
         if checker.check_output(
                 expected.rstrip(),
                 stdout.rstrip() + stderr.rstrip(),
@@ -27,8 +32,8 @@ class CommandValidator(object):
 
 class ClickValidator(CommandValidator):
 
-    def __init__(self, app, prefix=None):
-        super(ClickValidator, self).__init__()
+    def __init__(self, app, prefix=None, options=0):
+        super(ClickValidator, self).__init__(options)
 
         self.app = app
 
@@ -62,8 +67,8 @@ class SkipValidator(CommandValidator):
 
 class SubprocessValidator(CommandValidator):
 
-    def __init__(self):
-        super(SubprocessValidator, self).__init__()
+    def __init__(self, options=0):
+        super(SubprocessValidator, self).__init__(options)
 
     def run_command(self, command, args):
 
