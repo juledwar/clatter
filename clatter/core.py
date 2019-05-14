@@ -90,6 +90,12 @@ class Runner(object):
         '''
 
         for command, expected, options in self._parse_cli_statement(command):
+            if 'password' in ' '.join(command):
+                # Ignore anything after 1st arg so passwords are not
+                # shown.
+                print(">>> {} ...".format(command[0:2]))
+            else:
+                print(">>> {}".format(command))
 
             if options & doctest.SKIP:
                 continue
