@@ -8,7 +8,7 @@ class CommandValidator(object):
 
     def __init__(self, options=0):
         super(CommandValidator, self).__init__()
-        self.options = options
+        self.options = options | doctest.REPORT_NDIFF
 
     def validate(self, command, args, expected, options):
 
@@ -23,9 +23,11 @@ class CommandValidator(object):
                 options):
             return
 
-        msg = 'Clatter test failed. {0} != {1}\n\n+ {0}\n- {1}'.format(
-            stdout + stderr,
-            expected.rstrip())
+        self.want = expected.rstrip()
+        msg = checker.output_difference(
+            self,
+            stdout.rstrip() + stderr.rstrip(),
+            options)
 
         raise ValueError(msg)
 
