@@ -79,6 +79,4 @@ class SubprocessValidator(CommandValidator):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE)
 
-        p.wait()
-
         return tuple(map(lambda s: s.decode('utf-8'), p.communicate()))
